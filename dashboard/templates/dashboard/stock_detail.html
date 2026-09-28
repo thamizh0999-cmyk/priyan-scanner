@@ -1,0 +1,1713 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ stock.symbol }} - Priyan Scanner</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .back {
+            margin-bottom: 20px;
+        }
+
+        .back a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .header {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .symbol {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .company {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .live-price {
+            font-size: 40px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .live-change {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .positive {
+            color: #16a34a;
+        }
+
+        .negative {
+            color: #dc2626;
+        }
+
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .market-item {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        .market-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+        .market-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .live-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #16a34a;
+            margin-bottom: 15px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #16a34a;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .scanner-table,
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .scanner-table th,
+        .scanner-table td,
+        .price-table th,
+        .price-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .scanner-table th,
+        .price-table th {
+            background: #f8fafc;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .scanner-table td,
+        .price-table td {
+            font-size: 14px;
+        }
+
+        .rsi-oversold {
+            color: #16a34a;
+            font-weight: 700;
+        }
+
+        .rsi-neutral {
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .rsi-overbought {
+            color: #dc2626;
+            font-weight: 700;
+        }
+        .score-strong {
+    font-weight: 800;
+    color: #15803d;
+}
+
+.score-good {
+    font-weight: 700;
+    color: #2563eb;
+}
+.scanner-badge {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.scanner-momentum {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.scanner-swing {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.scanner-investment {
+    background: #dcfce7;
+    color: #15803d;
+}
+.return-positive {
+            color: #16a34a;
+            font-weight: 700;
+        }
+
+        .return-negative {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .return-neutral {
+            color: #64748b;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .info-item {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            font-weight: 700;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .symbol {
+                font-size: 26px;
+            }
+
+            .live-price {
+                font-size: 32px;
+            }
+
+            .market-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .rsi-oversold {
+            color: #16a34a;
+            font-weight: 700;
+        }
+
+        .rsi-neutral {
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .rsi-overbought {
+            color: #dc2626;
+            font-weight: 700;
+        }
+        .score-strong {
+    font-weight: 800;
+    color: #15803d;
+}
+
+.score-good {
+    font-weight: 700;
+    color: #2563eb;
+}
+.scanner-badge {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.scanner-momentum {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.scanner-swing {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.scanner-investment {
+    background: #dcfce7;
+    color: #15803d;
+}
+.return-positive {
+            color: #16a34a;
+            font-weight: 700;
+        }
+
+        .return-negative {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .return-neutral {
+            color: #64748b;
+        }
+        .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="back">
+        <a href="/">&larr; Back to Scanner</a>
+    </div>
+
+    <div class="header">
+        <div class="symbol">{{ stock.symbol }}</div>
+        <div class="company">{{ stock.company_name }}</div>
+    </div>
+
+    <div class="card">
+
+        <div class="card-title">LIVE MARKET</div>
+
+        <div class="live-status">
+            <span class="live-dot"></span>
+            LIVE
+        </div>
+
+        <div
+            id="live-price"
+            class="live-price"
+        >
+            {% if live_price and live_price.ltp is not None %}
+                {{ live_price.ltp|floatformat:2 }}
+            {% else %}
+                â€”
+            {% endif %}
+        </div>
+
+        <div
+            id="live-change"
+            class="live-change
+                {% if live_change is not None and live_change >= 0 %}
+                    positive
+                {% else %}
+                    negative
+                {% endif %}"
+        >
+            {% if live_change is not None %}
+                {% if live_change >= 0 %}+{% endif %}{{ live_change|floatformat:2 }}
+                ({{ live_change_percent|floatformat:2 }}%)
+            {% else %}
+                â€”
+            {% endif %}
+        </div>
+
+        <div class="market-grid">
+
+            <div class="market-item">
+                <div class="market-label">Previous Close</div>
+                <div id="previous-close" class="market-value">
+                    {% if live_price.previous_close %}
+                        {{ live_price.previous_close|floatformat:2 }}
+                    {% else %}
+                        â€”
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="market-item">
+                <div class="market-label">Day High</div>
+                <div id="day-high" class="market-value">
+                    {% if live_price.day_high %}
+                        {{ live_price.day_high|floatformat:2 }}
+                    {% else %}
+                        â€”
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="market-item">
+                <div class="market-label">Day Low</div>
+                <div id="day-low" class="market-value">
+                    {% if live_price.day_low %}
+                        {{ live_price.day_low|floatformat:2 }}
+                    {% else %}
+                        â€”
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="market-item">
+                <div class="market-label">Volume</div>
+                <div id="live-volume" class="market-value">
+                    {% if live_price.volume %}
+                        {{ live_price.volume }}
+                    {% else %}
+                        â€”
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        <div
+            id="live-updated"
+            style="margin-top:16px;font-size:13px;color:#6b7280;"
+        >
+            Last database update:
+            {% if live_price %}
+                {{ live_price.updated_at|date:"M. d, Y, g:i a" }}
+            {% else %}
+                â€”
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="card">
+    <div class="card-title">Price Chart</div>
+
+    <div
+        id="stock-chart"
+        style="width:100%;height:520px;overflow:hidden;position:relative;"
+    ></div>
+</div>
+
+<script>
+async function loadStockChart() {
+
+    const container =
+        document.getElementById("stock-chart");
+
+    try {
+
+        const response = await fetch(
+            "/api/history/{{ stock.symbol }}/",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("Chart API failed");
+        }
+
+        const result = await response.json();
+
+        if (!result.data || !result.data.length) {
+            container.innerHTML =
+                "<p>No historical data available.</p>";
+            return;
+        }
+
+        const data = result.data.slice(-60);
+
+        function drawChart() {
+
+            const width =
+                container.clientWidth || 900;
+
+            const height = 600;
+
+            const margin = {
+                top: 40,
+                right: 85,
+                bottom: 65,
+                left: 15
+            };
+
+            const chartWidth =
+                width -
+                margin.left -
+                margin.right;
+
+            const chartHeight =
+                height -
+                margin.top -
+                margin.bottom;
+
+            const highs =
+                data.map(d => Number(d.high));
+
+            const lows =
+                data.map(d => Number(d.low));
+
+            const maxPrice =
+                Math.max(...highs);
+
+            const minPrice =
+                Math.min(...lows);
+
+            const range =
+                maxPrice - minPrice;
+
+            const paddedMin =
+                minPrice - range * 0.05;
+
+            const paddedMax =
+                maxPrice + range * 0.05;
+
+            const paddedRange =
+                paddedMax - paddedMin;
+
+            function priceToY(price) {
+
+                return margin.top +
+                    (
+                        (paddedMax - price) /
+                        paddedRange
+                    ) *
+                    chartHeight;
+            }
+
+            const step =
+                chartWidth / data.length;
+
+            const candleWidth =
+                Math.max(
+                    4,
+                    Math.min(
+                        14,
+                        step * 0.80
+                    )
+                );
+
+            let svg = `
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="${width}"
+                    height="${height}"
+                    viewBox="0 0 ${width} ${height}"
+                    style="
+                        background:#ffffff;
+                        display:block;
+                        font-family:Arial,sans-serif;
+                    "
+                >
+            `;
+
+            /*
+             * GRID + PRICE AXIS
+             */
+
+            const gridSteps = 6;
+
+            for (
+                let i = 0;
+                i <= gridSteps;
+                i++
+            ) {
+
+                const price =
+                    paddedMin +
+                    (
+                        paddedRange *
+                        i /
+                        gridSteps
+                    );
+
+                const y =
+                    priceToY(price);
+
+                svg += `
+                    <line
+                        x1="${margin.left}"
+                        y1="${y}"
+                        x2="${width - margin.right}"
+                        y2="${y}"
+                        stroke="#eef2f7"
+                        stroke-width="1"
+                    />
+
+                    <text
+                        x="${width - margin.right + 10}"
+                        y="${y + 4}"
+                        font-size="12"
+                        fill="#64748b"
+                    >
+                        ${price.toFixed(0)}
+                    </text>
+                `;
+            }
+
+            /*
+             * CANDLESTICKS
+             */
+
+            data.forEach(
+                (item, index) => {
+
+                    const open =
+                        Number(item.open);
+
+                    const high =
+                        Number(item.high);
+
+                    const low =
+                        Number(item.low);
+
+                    const close =
+                        Number(item.close);
+
+                    const x =
+                        margin.left +
+                        step * index +
+                        step / 2;
+
+                    const highY =
+                        priceToY(high);
+
+                    const lowY =
+                        priceToY(low);
+
+                    const openY =
+                        priceToY(open);
+
+                    const closeY =
+                        priceToY(close);
+
+                    const bullish =
+                        close >= open;
+
+                    const color =
+                        bullish
+                            ? "#16a34a"
+                            : "#dc2626";
+
+                    /*
+                     * WICK
+                     */
+
+                    svg += `
+                        <line
+                            x1="${x}"
+                            y1="${highY}"
+                            x2="${x}"
+                            y2="${lowY}"
+                            stroke="${color}"
+                            stroke-width="1.5"
+                        />
+                    `;
+
+                    /*
+                     * BODY
+                     */
+
+                    const bodyTop =
+                        Math.min(
+                            openY,
+                            closeY
+                        );
+
+                    const bodyHeight =
+                        Math.max(
+                            2,
+                            Math.abs(
+                                closeY -
+                                openY
+                            )
+                        );
+
+                    svg += `
+                        <rect
+                            x="${x - candleWidth / 2}"
+                            y="${bodyTop}"
+                            width="${candleWidth}"
+                            height="${bodyHeight}"
+                            fill="${color}"
+                            rx="1"
+                        />
+                    `;
+                }
+            );
+
+            /*
+             * EMA LINES
+             */
+
+            function drawEMA(field, lineColor, lineWidth) {
+
+                let path = "";
+                let started = false;
+
+                data.forEach((item, index) => {
+
+                    const value = Number(item[field]);
+
+                    if (!Number.isFinite(value)) {
+                        return;
+                    }
+
+                    const x =
+                        margin.left +
+                        step * index +
+                        step / 2;
+
+                    const y =
+                        priceToY(value);
+
+                    if (!started) {
+                        path = `M ${x} ${y}`;
+                        started = true;
+                    } else {
+                        path += ` L ${x} ${y}`;
+                    }
+                });
+
+                if (started) {
+                    svg += `
+                        <path
+                            d="${path}"
+                            fill="none"
+                            stroke="${lineColor}"
+                            stroke-width="${lineWidth}"
+                            stroke-linejoin="round"
+                            stroke-linecap="round"
+                        />
+                    `;
+                }
+            }
+
+            drawEMA(
+                "ema20",
+                "#f59e0b",
+                2
+            );
+
+            drawEMA(
+                "ema50",
+                "#8b5cf6",
+                2
+            );
+
+            drawEMA(
+                "ema200",
+                "#2563eb",
+                2.5
+            );
+
+            /*
+             * EMA LEGEND
+             */
+
+            svg += `
+                <rect
+                    x="${margin.left + 10}"
+                    y="${margin.top + 10}"
+                    width="190"
+                    height="30"
+                    rx="5"
+                    fill="white"
+                    fill-opacity="0.92"
+                    stroke="#e2e8f0"
+                />
+
+                <text
+                    x="${margin.left + 18}"
+                    y="${margin.top + 30}"
+                    font-size="11"
+                    font-weight="600"
+                    fill="#f59e0b"
+                >EMA 20</text>
+
+                <text
+                    x="${margin.left + 75}"
+                    y="${margin.top + 30}"
+                    font-size="11"
+                    font-weight="600"
+                    fill="#8b5cf6"
+                >EMA 50</text>
+
+                <text
+                    x="${margin.left + 132}"
+                    y="${margin.top + 30}"
+                    font-size="11"
+                    font-weight="600"
+                    fill="#2563eb"
+                >EMA 200</text>
+            `;
+            /*
+             * DATE LABELS
+             */
+
+            const labelIndexes = [
+                0,
+                Math.floor(
+                    data.length * 0.25
+                ),
+                Math.floor(
+                    data.length * 0.50
+                ),
+                Math.floor(
+                    data.length * 0.75
+                ),
+                data.length - 1
+            ];
+
+            labelIndexes.forEach(
+                index => {
+
+                    const item =
+                        data[index];
+
+                    if (!item) return;
+
+                    const x =
+                        margin.left +
+                        step * index +
+                        step / 2;
+
+                    svg += `
+                        <text
+                            x="${x}"
+                            y="${height - 18}"
+                            text-anchor="middle"
+                            font-size="11" fill="#64748b"
+                        >
+                            ${item.date}
+                        </text>
+                    `;
+                }
+            );
+
+            /*
+             * LATEST CLOSE LINE
+             */
+
+            const latest =
+                Number(
+                    data[data.length - 1].close
+                );
+
+            const latestY =
+                priceToY(latest);
+
+            svg += `
+                <line
+                    x1="${margin.left}"
+                    y1="${latestY}"
+                    x2="${width - margin.right}"
+                    y2="${latestY}"
+                    stroke="#2563eb"
+                    stroke-width="1"
+                    stroke-dasharray="5,5"
+                />
+
+                <rect
+                    x="${width - margin.right + 4}"
+                    y="${latestY - 10}"
+                    width="70"
+                    height="20"
+                    rx="4"
+                    fill="#2563eb"
+                />
+
+                <text
+                    x="${width - margin.right + 39}"
+                    y="${latestY + 4}"
+                    text-anchor="middle"
+                    font-size="11"
+                    font-weight="600"
+                    fill="white"
+                >
+                    ${latest.toFixed(2)}
+                </text>
+            `;
+
+            svg += "</svg>";
+
+            container.innerHTML = svg;
+        }
+
+        drawChart();
+
+        window.addEventListener(
+            "resize",
+            drawChart
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Chart error:",
+            error
+        );
+
+        container.innerHTML =
+            "<p>Unable to load price chart.</p>";
+    }
+}
+
+loadStockChart();
+</script>
+
+<div class="card">
+    <div class="card-title">Volume</div>
+    <div
+        id="volume-chart"
+        style="width:100%;height:140px;overflow:hidden;position:relative;"
+    ></div>
+</div>
+
+<script>
+async function loadVolumeChart() {
+
+    const container =
+        document.getElementById("volume-chart");
+
+    try {
+
+        const response = await fetch(
+            "/api/history/{{ stock.symbol }}/",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("Volume API failed");
+        }
+
+        const result = await response.json();
+
+        if (!result.data || !result.data.length) {
+            container.innerHTML =
+                "<p>No volume data available.</p>";
+            return;
+        }
+
+        const data =
+            result.data.slice(-60);
+
+        const width =
+            container.clientWidth || 900;
+
+        const height = 140;
+
+        const margin = {
+            top: 20,
+            right: 90,
+            bottom: 25,
+            left: 15
+        };
+
+        const chartWidth =
+            width - margin.left - margin.right;
+
+        const chartHeight =
+            height - margin.top - margin.bottom;
+
+        const maxVolume =
+            Math.max(
+                ...data.map(
+                    item => Number(item.volume) || 0
+                ),
+                1
+            );
+
+        const step =
+            chartWidth / data.length;
+
+        const barWidth =
+            Math.max(
+                3,
+                Math.min(12, step * 0.7)
+            );
+
+        let svg = `
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="${width}"
+                height="${height}"
+                viewBox="0 0 ${width} ${height}"
+                style="
+                    display:block;
+                    width:100%;
+                    height:140px;
+                    background:#ffffff;
+                "
+            >
+
+            <line
+                x1="${margin.left}"
+                y1="${margin.top}"
+                x2="${width - margin.right}"
+                y2="${margin.top}"
+                stroke="#e2e8f0"
+            />
+
+            <line
+                x1="${margin.left}"
+                y1="${height - margin.bottom}"
+                x2="${width - margin.right}"
+                y2="${height - margin.bottom}"
+                stroke="#e2e8f0"
+            />
+
+            <text
+                x="${margin.left}"
+                y="${margin.top + 13}"
+                font-size="11"
+                font-weight="600"
+                fill="#64748b"
+            >
+                VOLUME
+            </text>
+
+            <text
+                x="${width - margin.right + 8}"
+                y="${margin.top + 13}"
+                font-size="11"
+                fill="#64748b"
+            >
+                ${Math.round(maxVolume).toLocaleString()}
+            </text>
+        `;
+
+        data.forEach((item, index) => {
+
+            const volume =
+                Number(item.volume) || 0;
+
+            const barHeight =
+                (volume / maxVolume) *
+                chartHeight;
+
+            const x =
+                margin.left +
+                index * step +
+                step / 2;
+
+            const y =
+                margin.top +
+                chartHeight -
+                barHeight;
+
+            const bullish =
+                Number(item.close) >=
+                Number(item.open);
+
+            const fill =
+                bullish
+                    ? "#22c55e"
+                    : "#ef4444";
+
+            svg += `
+                <rect
+                    x="${x - barWidth / 2}"
+                    y="${y}"
+                    width="${barWidth}"
+                    height="${Math.max(barHeight, 1)}"
+                    fill="${fill}"
+                    opacity="0.75"
+                    rx="1"
+                />
+            `;
+        });
+
+        svg += "</svg>";
+
+        container.innerHTML = svg;
+
+    } catch (error) {
+
+        console.error(
+            "Volume chart error:",
+            error
+        );
+
+        container.innerHTML =
+            "<p>Unable to load volume chart.</p>";
+    }
+}
+
+loadVolumeChart();</script>
+
+<div class="card">
+    <div class="card-title">RSI (14)</div>
+    <div id="rsi-chart" style="width:100%;height:180px;overflow:hidden;position:relative;"></div>
+</div>
+
+<script>
+async function loadRSIChart() {
+
+    const container = document.getElementById("rsi-chart");
+
+    try {
+        const response = await fetch(
+            "/api/history/{{ stock.symbol }}/",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("RSI API failed");
+        }
+
+        const result = await response.json();
+
+        if (!result.data || !result.data.length) {
+            container.innerHTML = "<p>No RSI data available.</p>";
+            return;
+        }
+
+        const data = result.data.slice(-60);
+
+        function drawRSI() {
+
+            const width = container.clientWidth || 900;
+            const height = 180;
+
+            const margin = {
+                top: 20,
+                right: 55,
+                bottom: 25,
+                left: 15
+            };
+
+            const chartWidth =
+                width - margin.left - margin.right;
+
+            const chartHeight =
+                height - margin.top - margin.bottom;
+
+            const step =
+                chartWidth / data.length;
+
+            function rsiToY(value) {
+                return margin.top +
+                    ((100 - value) / 100) *
+                    chartHeight;
+            }
+
+            let svg = `
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="${width}"
+                    height="${height}"
+                    viewBox="0 0 ${width} ${height}"
+                    style="
+                        background:#ffffff;
+                        display:block;
+                        font-family:Arial,sans-serif;
+                    "
+                >
+            `;
+
+            const y70 = rsiToY(70);
+            const y50 = rsiToY(50);
+            const y30 = rsiToY(30);
+
+            svg += `
+                <line
+                    x1="${margin.left}"
+                    y1="${y70}"
+                    x2="${width - margin.right}"
+                    y2="${y70}"
+                    stroke="#dc2626"
+                    stroke-width="1"
+                    stroke-dasharray="5,4"
+                />
+
+                <line
+                    x1="${margin.left}"
+                    y1="${y50}"
+                    x2="${width - margin.right}"
+                    y2="${y50}"
+                    stroke="#cbd5e1"
+                    stroke-width="1"
+                />
+
+                <line
+                    x1="${margin.left}"
+                    y1="${y30}"
+                    x2="${width - margin.right}"
+                    y2="${y30}"
+                    stroke="#16a34a"
+                    stroke-width="1"
+                    stroke-dasharray="5,4"
+                />
+
+                <text
+                    x="${margin.left}"
+                    y="${margin.top + 12}"
+                    font-size="11"
+                    font-weight="600"
+                    fill="#64748b"
+                >
+                    RSI 14
+                </text>
+
+                <text
+                    x="${width - margin.right + 10}"
+                    y="${y70 + 4}"
+                    font-size="11" fill="#dc2626"
+                >70</text>
+
+                <text
+                    x="${width - margin.right + 10}"
+                    y="${y50 + 4}"
+                    font-size="11" fill="#64748b"
+                >50</text>
+
+                <text
+                    x="${width - margin.right + 10}"
+                    y="${y30 + 4}"
+                    font-size="11" fill="#16a34a"
+                >30</text>
+            `;
+
+            let path = "";
+            let started = false;
+
+            data.forEach((item, index) => {
+
+                const value = Number(item.rsi14);
+
+                if (!Number.isFinite(value)) {
+                    return;
+                }
+
+                const x =
+                    margin.left +
+                    step * index +
+                    step / 2;
+
+                const y = rsiToY(value);
+
+                if (!started) {
+                    path = `M ${x} ${y}`;
+                    started = true;
+                } else {
+                    path += ` L ${x} ${y}`;
+                }
+            });
+
+            if (started) {
+                svg += `
+                    <path
+                        d="${path}"
+                        fill="none"
+                        stroke="#2563eb"
+                        stroke-width="2"
+                        stroke-linejoin="round"
+                        stroke-linecap="round"
+                    />
+                `;
+            }
+
+            const latestRSI =
+                Number(data[data.length - 1].rsi14);
+
+            if (Number.isFinite(latestRSI)) {
+
+                const latestX =
+                    margin.left +
+                    step * (data.length - 1) +
+                    step / 2;
+
+                const latestY =
+                    rsiToY(latestRSI);
+
+                svg += `
+                    <circle
+                        cx="${latestX}"
+                        cy="${latestY}"
+                        r="4"
+                        fill="#2563eb"
+                    />
+
+                    <text
+                        x="${margin.left + 10}"
+                        y="${height - 8}"
+                        font-size="11"
+                        font-weight="600"
+                        fill="#2563eb"
+                    >
+                        Current RSI: ${latestRSI.toFixed(2)}
+                    </text>
+                `;
+            }
+
+            svg += "</svg>";
+
+            container.innerHTML = svg;
+        }
+
+        drawRSI();
+
+        window.addEventListener(
+            "resize",
+            drawRSI
+        );
+
+    } catch (error) {
+
+        console.error(
+            "RSI chart error:",
+            error
+        );
+
+        container.innerHTML =
+            "<p>Unable to load RSI chart.</p>";
+    }
+}
+
+loadRSIChart();
+</script>
+<div class="card">
+
+        <div class="card-title">Latest Close</div>
+
+        {% if prices %}
+            {% with latest=prices.0 %}
+
+            <div class="market-grid">
+
+                <div class="market-item">
+                    <div class="market-label">Close</div>
+                    <div class="market-value">
+                        {{ latest.close|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-label">Day High</div>
+                    <div class="market-value">
+                        {{ latest.high|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-label">Day Low</div>
+                    <div class="market-value">
+                        {{ latest.low|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-label">Volume</div>
+                    <div class="market-value">
+                        {{ latest.volume }}
+                    </div>
+                </div>
+
+            </div>
+
+            {% endwith %}
+        {% endif %}
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-title">Stock Information</div>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <div class="info-label">Symbol</div>
+                <div class="info-value">
+                    {{ stock.symbol }}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">ISIN</div>
+                <div class="info-value">
+                    {{ stock.isin|default:"-" }}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Sector</div>
+                <div class="info-value">
+                    {{ stock.sector|default:"-" }}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Industry</div>
+                <div class="info-value">
+                    {{ stock.industry|default:"-" }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-title">Scanner Results</div>
+
+        <div class="table-wrapper">
+
+            <table class="scanner-table">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Scanner</th>
+                        <th>Rank</th>
+                        <th>Score</th>
+                        <th>Close</th>
+                        <th>Breakout</th>
+                        <th>RelVol</th>
+                        <th>RSI</th><th>20D</th><th>120D</th><th>200D</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for result in scan_results %}
+
+                    <tr>
+                        <td>
+                            {{ result.scan_run.scan_date|date:"M. d, Y" }}
+                        </td>
+
+                        <td>
+                            {% if result.scan_run.scan_type == "MOMENTUM" %}
+                                <span class="scanner-badge scanner-momentum">
+                                    Momentum
+                                </span>
+                            {% elif result.scan_run.scan_type == "SWING" %}
+                                <span class="scanner-badge scanner-swing">
+                                    Swing Breakout
+                                </span>
+                            {% elif result.scan_run.scan_type == "INVESTMENT" %}
+                                <span class="scanner-badge scanner-investment">
+                                    Investment Breakout
+                                </span>
+                            {% else %}
+                                <strong>
+                                    {{ result.scan_run.get_scan_type_display }}
+                                </strong>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            #{{ result.rank }}
+                        </td>
+
+                        <td>
+                            <span class="{% if result.score >= 90 %}score-strong{% elif result.score >= 80 %}score-good{% endif %}">
+                                {{ result.score|floatformat:2 }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ result.close|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            {% if result.breakout_percent is not None %}
+                                {{ result.breakout_percent|floatformat:2 }}%
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if result.relative_volume is not None %}
+                                {{ result.relative_volume|floatformat:2 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if result.rsi is not None %}
+                                <span class="{% if result.rsi < 30 %}rsi-oversold{% elif result.rsi > 70 %}rsi-overbought{% else %}rsi-neutral{% endif %}">
+                                    {{ result.rsi|floatformat:2 }}
+                                </span>
+                            {% else %}
+                                <span class="return-neutral">-</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if result.return_20 is not None %}
+                                <span class="{% if result.return_20 > 0 %}return-positive{% elif result.return_20 < 0 %}return-negative{% else %}return-neutral{% endif %}">
+                                    {{ result.return_20|floatformat:2 }}%
+                                </span>
+                            {% else %}
+                                <span class="return-neutral">-</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if result.return_120 is not None %}
+                                <span class="{% if result.return_120 > 0 %}return-positive{% elif result.return_120 < 0 %}return-negative{% else %}return-neutral{% endif %}">
+                                    {{ result.return_120|floatformat:2 }}%
+                                </span>
+                            {% else %}
+                                <span class="return-neutral">-</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if result.return_200 is not None %}
+                                <span class="{% if result.return_200 > 0 %}return-positive{% elif result.return_200 < 0 %}return-negative{% else %}return-neutral{% endif %}">
+                                    {{ result.return_200|floatformat:2 }}%
+                                </span>
+                            {% else %}
+                                <span class="return-neutral">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="11">
+                            No scanner results.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-title">Recent Price History</div>
+
+        <div class="table-wrapper">
+
+            <table class="price-table">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Close</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for price in prices %}
+
+                    <tr>
+                        <td>
+                            {{ price.date|date:"M. d, Y" }}
+                        </td>
+
+                        <td>{{ price.open|floatformat:2 }}</td>
+                        <td>{{ price.high|floatformat:2 }}</td>
+                        <td>{{ price.low|floatformat:2 }}</td>
+                        <td>{{ price.close|floatformat:2 }}</td>
+                        <td>{{ price.volume }}</td>
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="6">
+                            No price history available.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+const symbol = "{{ stock.symbol }}";
+
+async function updateLivePrice() {
+
+    try {
+
+        const response = await fetch(
+            `/api/live/${symbol}/`,
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!data.available) {
+            return;
+        }
+
+        if (data.ltp !== null) {
+            document.getElementById("live-price").textContent =
+                "" + data.ltp.toFixed(2);
+        }
+
+        const changeElement =
+            document.getElementById("live-change");
+
+        if (
+            data.change !== null &&
+            data.change_percent !== null
+        ) {
+
+            const sign = data.change >= 0 ? "+" : "";
+
+            changeElement.textContent =
+                sign +
+                "" +
+                data.change.toFixed(2) +
+                " (" +
+                data.change_percent.toFixed(2) +
+                "%)";
+
+            changeElement.classList.remove(
+                "positive",
+                "negative"
+            );
+
+            changeElement.classList.add(
+                data.change >= 0
+                    ? "positive"
+                    : "negative"
+            );
+        }
+
+        if (data.previous_close !== null) {
+            document.getElementById("previous-close").textContent =
+                "" + data.previous_close.toFixed(2);
+        }
+
+        if (data.day_high !== null) {
+            document.getElementById("day-high").textContent =
+                "" + data.day_high.toFixed(2);
+        }
+
+        if (data.day_low !== null) {
+            document.getElementById("day-low").textContent =
+                "" + data.day_low.toFixed(2);
+        }
+
+        if (data.volume !== null) {
+            document.getElementById("live-volume").textContent =
+                Number(data.volume).toLocaleString("en-IN");
+        }
+
+        if (data.updated_at) {
+
+            const updated =
+                new Date(data.updated_at);
+
+            document.getElementById("live-updated").textContent =
+                "Last database update: " +
+                updated.toLocaleString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                });
+        }
+
+    } catch (error) {
+        console.error(
+            "Live price update failed:",
+            error
+        );
+    }
+}
+
+updateLivePrice();
+
+setInterval(
+    updateLivePrice,
+    3000
+);
+</script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,39 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Django local database
+db.sqlite3
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Generated reports
+reports/generated/
+
+# Local temporary files
+chart_block.txt
+settings_header.txt
+
+# Local compressed/cache data
+upstox_instruments.json.gz
+
+# IDE / editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

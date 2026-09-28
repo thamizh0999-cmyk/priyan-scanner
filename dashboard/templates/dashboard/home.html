@@ -1,0 +1,582 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Priyan Scanner</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+            color: #17202a;
+        }
+
+        .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    color: #667085;
+    font-size: 14px;
+}
+
+.scanner-button {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.scanner-button:hover {
+    opacity: 0.9;
+}
+.logout-button {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 8px;
+    background: #dc2626;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.logout-button:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+    .top-bar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+.container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #2563eb;
+        }
+
+        .search-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            opacity: 0.9;
+        }
+
+        .search-results {
+            margin-top: 15px;
+        }
+
+        .search-result {
+            display: block;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            text-decoration: none;
+            color: #17202a;
+        }
+
+        .search-result:hover {
+            background: #eef4ff;
+        }
+
+        .search-symbol {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .search-company {
+            color: #667085;
+            margin-left: 8px;
+        }
+
+        
+.section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            overflow-x: auto;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            text-align: right;
+        }
+
+        th:first-child,
+        td:first-child,
+        th:nth-child(2),
+        td:nth-child(2) {
+            text-align: left;
+        }
+
+        th {
+            background: #f8f9fa;
+        }
+
+        .score-strong {
+    font-weight: 800;
+    color: #15803d;
+}
+
+.score-good {
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.rank-top {
+    font-weight: 800;
+}
+
+.return-positive {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+.rsi-overbought {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+.rsi-neutral {
+    color: #475569;
+    font-weight: 600;
+}
+
+.rsi-oversold {
+    color: #16a34a;
+    font-weight: 700;
+}
+.return-positive {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+.breakout-value {
+    color: #c2410c;
+    font-weight: 700;
+}
+
+.rsi-overbought {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+.rsi-neutral {
+    color: #475569;
+    font-weight: 600;
+}
+
+.rsi-oversold {
+    color: #16a34a;
+    font-weight: 700;
+}
+.score {
+            font-weight: bold;
+        }
+
+        .stock-link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .stock-link:hover {
+            text-decoration: underline;
+        }
+
+        .date {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .empty {
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+
+            
+.section {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <div class="user-info">
+            Logged in as <strong>{{ user.username }}</strong>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+            <a href="{% url 'dashboard_home' %}" class="scanner-button">
+                Scanner Dashboard
+            </a>
+
+            <a href="{% url 'monthly_report' %}" class="scanner-button">
+                Monthly PDF Report
+            </a>
+
+            <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <h1>PRIYAN SCANNER</h1>
+
+    <div class="subtitle">
+        NSE Momentum - Swing Breakouts - Investment Breakouts
+    </div>
+
+
+    <!-- STOCK SEARCH -->
+
+    <div class="search-box">
+
+        <form method="get" class="search-form">
+
+            <input
+                type="text"
+                name="q"
+                class="search-input"
+                placeholder="Search stock symbol or company name..."
+                value="{{ search_query }}"
+                autocomplete="off"
+            >
+
+            <button type="submit" class="search-button">
+                Search
+            </button>
+
+        </form>
+
+        {% if search_query %}
+
+        <div class="search-results">
+
+            {% if search_results %}
+
+                <strong>Search results for "{{ search_query }}"</strong>
+
+                {% for stock in search_results %}
+
+                    <a
+                        class="search-result"
+                        href="{% url 'stock_detail' stock.symbol %}"
+                    >
+                        <span class="search-symbol">
+                            {{ stock.symbol }}
+                        </span>
+
+                        <span class="search-company">
+                            {{ stock.company_name }}
+                        </span>
+                    </a>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+                    No active stock found for "{{ search_query }}".
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- MOMENTUM -->
+
+    <div class="section">
+
+        <h2>Top 10 Momentum</h2>
+
+        {% if momentum_run %}
+
+        <div class="date">
+            Scan date: {{ momentum_run.scan_date }}
+        </div>
+
+        <table>
+
+            <tr>
+                <th>Rank</th>
+                <th>Symbol</th>
+                <th>Score</th>
+                <th>Close</th>
+                <th>1M %</th>
+                <th>3M %</th>
+                <th>6M %</th>
+                <th>RSI</th>
+                <th>RelVol</th>
+            </tr>
+
+            {% for result in momentum_run.results.all %}
+
+            <tr>
+                <td class="{% if result.rank <= 3 %}rank-top{% endif %}">{{ result.rank }}</td>
+
+                <td>
+                    <a
+                        class="stock-link"
+                        href="{% url 'stock_detail' result.stock.symbol %}"
+                    >
+                        <strong>{{ result.stock.symbol }}</strong>
+                    </a>
+                </td>
+
+                <td class="score"><span class="{% if result.score >= 90 %}score-strong{% elif result.score >= 80 %}score-good{% endif %}">{{ result.score }}</span></td>
+                <td>{{ result.close }}</td>
+                <td><span class="return-positive">{{ result.return_20 }}%</span></td>
+                <td><span class="return-positive">{{ result.return_120 }}%</span></td>
+                <td><span class="return-positive">{{ result.return_200 }}%</span></td>
+                <td><span class="{% if result.rsi < 30 %}rsi-oversold{% elif result.rsi > 70 %}rsi-overbought{% else %}rsi-neutral{% endif %}">{{ result.rsi }}</span></td>
+                <td>{{ result.relative_volume }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            No momentum scan available.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- SWING -->
+
+    <div class="section">
+
+        <h2>Swing Breakouts</h2>
+
+        {% if swing_run %}
+
+        <div class="date">
+            Scan date: {{ swing_run.scan_date }}
+        </div>
+
+        <table>
+
+            <tr>
+                <th>Rank</th>
+                <th>Symbol</th>
+                <th>Score</th>
+                <th>Close</th>
+                <th>Breakout</th>
+                <th>RSI</th>
+                <th>RelVol</th>
+                <th>20D %</th>
+            </tr>
+
+            {% for result in swing_run.results.all %}
+
+            <tr>
+                <td class="{% if result.rank <= 3 %}rank-top{% endif %}">{{ result.rank }}</td>
+
+                <td>
+                    <a
+                        class="stock-link"
+                        href="{% url 'stock_detail' result.stock.symbol %}"
+                    >
+                        <strong>{{ result.stock.symbol }}</strong>
+                    </a>
+                </td>
+
+                <td class="score"><span class="{% if result.score >= 90 %}score-strong{% elif result.score >= 80 %}score-good{% endif %}">{{ result.score }}</span></td>
+                <td>{{ result.close }}</td>
+                <td>{{ result.breakout_percent }}%</td>
+                <td><span class="{% if result.rsi < 30 %}rsi-oversold{% elif result.rsi > 70 %}rsi-overbought{% else %}rsi-neutral{% endif %}">{{ result.rsi }}</span></td>
+                <td>{{ result.relative_volume }}</td>
+                <td><span class="return-positive">{{ result.return_20 }}%</span></td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            No swing scan available.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- INVESTMENT -->
+
+    <div class="section">
+
+        <h2>Investment Breakouts</h2>
+
+        {% if investment_run %}
+
+        <div class="date">
+            Scan date: {{ investment_run.scan_date }}
+        </div>
+
+        <table>
+
+            <tr>
+                <th>Rank</th>
+                <th>Symbol</th>
+                <th>Score</th>
+                <th>Close</th>
+                <th>Breakout</th>
+                <th>RSI</th>
+                <th>RelVol</th>
+                <th>6M %</th>
+                <th>1Y %</th>
+            </tr>
+
+            {% for result in investment_run.results.all %}
+
+            <tr>
+                <td class="{% if result.rank <= 3 %}rank-top{% endif %}">{{ result.rank }}</td>
+
+                <td>
+                    <a
+                        class="stock-link"
+                        href="{% url 'stock_detail' result.stock.symbol %}"
+                    >
+                        <strong>{{ result.stock.symbol }}</strong>
+                    </a>
+                </td>
+
+                <td class="score"><span class="{% if result.score >= 90 %}score-strong{% elif result.score >= 80 %}score-good{% endif %}">{{ result.score }}</span></td>
+                <td>{{ result.close }}</td>
+                <td>{{ result.breakout_percent }}%</td>
+                <td><span class="{% if result.rsi < 30 %}rsi-oversold{% elif result.rsi > 70 %}rsi-overbought{% else %}rsi-neutral{% endif %}">{{ result.rsi }}</span></td>
+                <td>{{ result.relative_volume }}</td>
+                <td><span class="return-positive">{{ result.return_120 }}%</span></td>
+                <td><span class="return-positive">{{ result.return_200 }}%</span></td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            No investment scan available.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
+
+
+
+
+
